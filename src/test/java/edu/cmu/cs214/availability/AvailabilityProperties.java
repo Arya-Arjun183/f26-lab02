@@ -34,7 +34,31 @@ class AvailabilityProperties {
     }
 
     // --- Milestone 1: add your stronger property here ---
-
+    @Property
+    void checkAllSlotsAreFree(@ForAll("scenarios") Scenario s) {
+        List<TimeInterval> free = calc.freeSlots(s.dayStart(), s.dayEnd(), s.bookings());
+        for (int m = s.dayStart(); m < s.dayEnd(); m++) {
+            TimeInterval minuteSlot = new TimeInterval(m, m + 1);
+            boolean isBooked = false;
+            for (TimeInterval booking : s.bookings()) {
+                if (minuteSlot.overlaps(booking)) {
+                    isBooked = true;
+                    break;
+                }
+            }
+            if (!isBooked) {
+                boolean inFreeSlot = false;
+                for (TimeInterval slot : free) {
+                    if (slot.overlaps(minuteSlot)) {
+                        inFreeSlot = true;
+                        break;
+                    }
+                }
+                org.junit.jupiter.api.Assertions.assertTrue(inFreeSlot,
+                    () -> "free minute " + minuteSlot + " is not contained in any returned free slot");
+            }
+        }
+    }
     /** Generates a business day plus a list of bookings (possibly unsorted, overlapping, or outside hours). */
     @Provide
     Arbitrary<Scenario> scenarios() {
