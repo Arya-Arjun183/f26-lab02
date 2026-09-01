@@ -35,3 +35,5 @@ green once you fix it.
 - Setup: `SETUP.md`
 
 See the Lab 2 handout on the course page for the three milestones you show a TA.
+
+Used: Antigravity with Gemini 3.1 Pro
